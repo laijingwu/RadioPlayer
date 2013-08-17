@@ -4,6 +4,8 @@
 CAudioPlayer::CAudioPlayer(void)
 	: OnlyOneOpen(false)
 {
+	player = CreateZPlay();
+	player->SetMasterVolume(100,100);
 }
 
 
@@ -11,9 +13,8 @@ CAudioPlayer::~CAudioPlayer(void)
 {
 }
 
-ZPlay *player = CreateZPlay();
 
-
+// 加载文件
 void CAudioPlayer::Load(HWND hWnd, CString strFilePath)
 {
 	if(player->OpenFileW(strFilePath,sfAutodetect) == 0){
@@ -26,6 +27,7 @@ void CAudioPlayer::Load(HWND hWnd, CString strFilePath)
 }
 
 
+// 播放
 void CAudioPlayer::Play(HWND hWnd, CString strFilePath)
 {
 	if(OnlyOneOpen == false){
@@ -36,6 +38,7 @@ void CAudioPlayer::Play(HWND hWnd, CString strFilePath)
 }
 
 
+// 暂停
 void CAudioPlayer::Pause(void)
 {
 	player->Pause();
@@ -43,6 +46,7 @@ void CAudioPlayer::Pause(void)
 }
 
 
+// 恢复
 void CAudioPlayer::Resume(void)
 {
 	player->Resume();
@@ -50,6 +54,7 @@ void CAudioPlayer::Resume(void)
 }
 
 
+// 停止
 void CAudioPlayer::Stop(bool bClose = false)
 {
 	player->Stop();
@@ -61,6 +66,7 @@ void CAudioPlayer::Stop(bool bClose = false)
 }
 
 
+// 获取libZPlay库版本
 CString CAudioPlayer::GetVersion(void)
 {
 	CString m_strVersion;
@@ -70,20 +76,18 @@ CString CAudioPlayer::GetVersion(void)
 }
 
 
+// 获取媒体文件总时间
 CString CAudioPlayer::GetMediaLengthStr(void)
 {
 	TStreamInfo m_info;
 	player->GetStreamInfo(&m_info);
 	CString m_strLength;
-	if(m_info.Length.hms.hour > 0){
-		m_strLength.Format(L"%02d:%02d:%02d",m_info.Length.hms.hour,m_info.Length.hms.minute,m_info.Length.hms.second);
-	}else{
-		m_strLength.Format(L"%02d:%02d",m_info.Length.hms.minute,m_info.Length.hms.second);
-	}	
+	m_strLength.Format(L"%02d:%02d",m_info.Length.hms.hour*60+m_info.Length.hms.minute,m_info.Length.hms.second);
 	return m_strLength;
 }
 
 
+// 获取媒体文件ID3信息
 TID3InfoExW CAudioPlayer::LoadID3Ex(HWND hWnd, CString strFilePath = NULL)
 {
 	TID3InfoExW id3_info;
@@ -97,4 +101,23 @@ TID3InfoExW CAudioPlayer::LoadID3Ex(HWND hWnd, CString strFilePath = NULL)
 		}
 		return id3_info;
 	}
+}
+
+
+// 获取播放当前时间
+CString CAudioPlayer::GetMediaTimeStr(void)
+{
+	TStreamTime pos;
+	player->GetPosition(&pos);
+	CString m_strMediaPosition;
+	m_strMediaPosition.Format(L"%02d:%02d",pos.hms.hour*60+pos.hms.minute,pos.hms.second);
+	return m_strMediaPosition;
+}
+
+
+// 设置音量
+void CAudioPlayer::SetVolumn(unsigned int nVol)
+{
+	player->SetPlayerVolume(nVol,nVol);
+	return;
 }

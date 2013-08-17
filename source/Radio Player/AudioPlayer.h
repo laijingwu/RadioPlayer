@@ -8,6 +8,7 @@ class CAudioPlayer
 public:
 	CAudioPlayer(void);
 	~CAudioPlayer(void);
+	ZPlay *player;
 	void Load(HWND hWnd, CString strFilePath);
 	void Play(HWND hWnd, CString strFilePath);
 	void Pause(void);
@@ -17,5 +18,7 @@ public:
 	CString GetVersion(void);
 	CString GetMediaLengthStr(void);
 	TID3InfoExW LoadID3Ex(HWND hWnd, CString strFilePath);
+	CString GetMediaTimeStr(void);
+	void SetVolumn(unsigned int nVol);
 };
 

@@ -100,6 +100,7 @@ BOOL CRadioPlayerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	AudioPlayer.player->SetPlayerVolume(80,80);	//初始音量
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -157,9 +158,8 @@ HCURSOR CRadioPlayerDlg::OnQueryDragIcon()
 
 void CRadioPlayerDlg::OnBnClickedBtnAbout()
 {
-	//CAboutDlg dlgAbout;
-	//dlgAbout.DoModal();
-	MessageBox(AudioPlayer.GetVersion());
+	CAboutDlg dlgAbout;
+	dlgAbout.DoModal();
 }
 
 
