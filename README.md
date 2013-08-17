@@ -1,5 +1,5 @@
 #Radio Player
-Radio Player是一个C++程序，最初特供给“男版迪士尼”的一个朋友——THB886。
+Radio Player是一个英文的C++程序，用于模拟现实电台。
 
 Radio Player 正在进行v1.2.1版开发。
 
