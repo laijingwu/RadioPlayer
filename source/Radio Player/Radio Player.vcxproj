@@ -104,6 +104,8 @@
   <ItemGroup>
     <ClInclude Include="AudioPlayer.h" />
     <ClInclude Include="libzplay.h" />
+    <ClInclude Include="MusicList.h" />
+    <ClInclude Include="Prog_PlayTimeProc.h" />
     <ClInclude Include="Radio Player.h" />
     <ClInclude Include="Radio PlayerDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -112,6 +114,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioPlayer.cpp" />
+    <ClCompile Include="MusicList.cpp" />
+    <ClCompile Include="Prog_PlayTimeProc.cpp" />
     <ClCompile Include="Radio Player.cpp" />
     <ClCompile Include="Radio PlayerDlg.cpp" />
     <ClCompile Include="stdafx.cpp">

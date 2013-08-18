@@ -78,7 +78,7 @@ CString CAudioPlayer::GetVersion(void)
 }
 
 
-// 获取媒体文件总时间
+// 获取媒体文件总时间（风格化）
 CString CAudioPlayer::GetMediaLengthStr(void)
 {
 	TStreamInfo m_info;
@@ -106,7 +106,7 @@ TID3InfoExW CAudioPlayer::LoadID3Ex(HWND hWnd, CString strFilePath)
 }
 
 
-// 获取播放当前时间
+// 获取播放当前时间（风格化）
 CString CAudioPlayer::GetMediaTimeStr(void)
 {
 	TStreamTime pos;
@@ -122,4 +122,26 @@ void CAudioPlayer::SetVolume(unsigned int nVol)
 {
 	player->SetPlayerVolume(nVol,nVol);
 	return;
+}
+
+
+// 获取媒体文件总时间
+unsigned int CAudioPlayer::GetMediaLength(void)
+{
+	unsigned int m_Length;
+	TStreamInfo m_info;
+	player->GetStreamInfo(&m_info);
+	m_Length = ((m_info.Length.hms.hour*60+m_info.Length.hms.minute)*60+m_info.Length.hms.second)*1000+m_info.Length.hms.millisecond;
+	return m_Length;
+}
+
+
+// 获取播放当前时间
+unsigned int CAudioPlayer::GetMediaTime(void)
+{
+	unsigned int m_Pos;
+	TStreamTime pos;
+	player->GetPosition(&pos);
+	m_Pos = ((pos.hms.hour*60+pos.hms.minute)*60+pos.hms.second)*1000+pos.hms.millisecond;
+	return m_Pos;
 }

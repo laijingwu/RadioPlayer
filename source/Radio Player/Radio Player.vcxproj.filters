@@ -50,6 +50,12 @@
     <ClInclude Include="AudioPlayer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Prog_PlayTimeProc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MusicList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Radio Player.cpp">
@@ -62,6 +68,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="AudioPlayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Prog_PlayTimeProc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicList.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

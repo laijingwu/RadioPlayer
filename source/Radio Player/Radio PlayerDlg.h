@@ -7,6 +7,8 @@
 #include "AudioPlayer.h"
 #include "afxcmn.h"
 #include "afxwin.h"
+#include "Prog_PlayTimeProc.h"
+#include "MusicList.h"
 
 // CRadioPlayerDlg ¶Ô»°¿ò
 class CRadioPlayerDlg : public CDialogEx
@@ -54,4 +56,8 @@ public:
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedBtnQuiet();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	Time RunTime;
+	CProg_PlayTimeProc Prog_PlayTime;
+	LRESULT Prog_PlayTimeProc(WPARAM wParam, LPARAM lParam);
 };
