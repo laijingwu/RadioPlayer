@@ -26,6 +26,7 @@
       <Filter>源文件</Filter>
     </None>
     <None Include="libzplay.dll" />
+    <None Include="Log.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Radio Player.h">

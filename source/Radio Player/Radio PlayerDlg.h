@@ -5,6 +5,14 @@
 #pragma once
 #include "audioplayer.h"
 #include "AudioPlayer.h"
+#include "afxcmn.h"
+
+
+// 自定义结构体
+//struct AddFolderThreadParam{
+//	CString Path;
+//	PVOID dlg;
+//};
 
 
 // CRadioPlayerDlg 对话框
@@ -20,7 +28,6 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 
-
 // 实现
 protected:
 	HICON m_hIcon;
@@ -32,7 +39,16 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	// TEMP
+	CString tmp_strAddFolderPath;
+
 	afx_msg void OnBnClickedBtnAbout();
 	afx_msg void OnBnClickedBtnExit();
 	CAudioPlayer AudioPlayer;
+	CListCtrl ctrl_MusicList;
+	CSliderCtrl ctrl_SliderVol;
+	afx_msg void OnBnClickedBtnAddfile();
+	ListArray arrMusicListPath;
+	afx_msg void OnBnClickedBtnAddfolder();
+	void AddFolderToList(CString strFilePath);
 };

@@ -40,7 +40,9 @@
 
 #include <afxsock.h>            // MFC Ì×½Ó×ÖÀ©Õ¹
 
-
+#include <vector>
+typedef std::vector<CString> ListArray;
+typedef std::vector<CString> MyCStringArray;
 
 
 

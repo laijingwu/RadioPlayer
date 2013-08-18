@@ -96,6 +96,7 @@
   <ItemGroup>
     <None Include="libzplay.def" />
     <None Include="libzplay.dll" />
+    <None Include="Log.txt" />
     <None Include="ReadMe.txt" />
     <None Include="res\Radio Player.ico" />
     <None Include="res\RadioPlayer.rc2" />

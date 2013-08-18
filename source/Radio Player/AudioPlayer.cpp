@@ -15,15 +15,15 @@ CAudioPlayer::~CAudioPlayer(void)
 
 
 // 加载文件
-void CAudioPlayer::Load(HWND hWnd, CString strFilePath)
+bool CAudioPlayer::Load(HWND hWnd, CString strFilePath)
 {
 	if(player->OpenFileW(strFilePath,sfAutodetect) == 0){
 		MessageBox(hWnd,player->GetErrorW(),L"Core Error",MB_ICONHAND|MB_ICONSTOP|MB_ICONERROR);
 		player->Close();
-		return;
+		return false;
 	}
 	OnlyOneOpen = true;
-	return;
+	return true;
 }
 
 
@@ -31,7 +31,9 @@ void CAudioPlayer::Load(HWND hWnd, CString strFilePath)
 void CAudioPlayer::Play(HWND hWnd, CString strFilePath)
 {
 	if(OnlyOneOpen == false){
-		Load(hWnd,strFilePath);
+		if(Load(hWnd,strFilePath) == false){
+			return;
+		}
 	}
 	player->Play();
 	return;
@@ -88,7 +90,7 @@ CString CAudioPlayer::GetMediaLengthStr(void)
 
 
 // 获取媒体文件ID3信息
-TID3InfoExW CAudioPlayer::LoadID3Ex(HWND hWnd, CString strFilePath = NULL)
+TID3InfoExW CAudioPlayer::LoadID3Ex(HWND hWnd, CString strFilePath)
 {
 	TID3InfoExW id3_info;
 	if(strFilePath.IsEmpty()){
@@ -96,7 +98,7 @@ TID3InfoExW CAudioPlayer::LoadID3Ex(HWND hWnd, CString strFilePath = NULL)
 		return id3_info;
 	}else{
 		if(player->LoadFileID3ExW(strFilePath,sfAutodetect,&id3_info,0) == 0){
-			MessageBox(hWnd,player->GetErrorW(),L"Core Error",MB_ICONHAND|MB_ICONSTOP|MB_ICONERROR);
+			//MessageBox(hWnd,player->GetErrorW(),L"Core Error",MB_ICONHAND|MB_ICONSTOP|MB_ICONERROR);
 			return TID3InfoExW();
 		}
 		return id3_info;

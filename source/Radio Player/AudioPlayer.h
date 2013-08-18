@@ -9,7 +9,7 @@ public:
 	CAudioPlayer(void);
 	~CAudioPlayer(void);
 	ZPlay *player;
-	void Load(HWND hWnd, CString strFilePath);
+	bool Load(HWND hWnd, CString strFilePath);
 	void Play(HWND hWnd, CString strFilePath);
 	void Pause(void);
 	void Resume(void);
@@ -17,7 +17,7 @@ public:
 	void Stop(bool bClose);
 	CString GetVersion(void);
 	CString GetMediaLengthStr(void);
-	TID3InfoExW LoadID3Ex(HWND hWnd, CString strFilePath);
+	TID3InfoExW LoadID3Ex(HWND hWnd, CString strFilePath = NULL);
 	CString GetMediaTimeStr(void);
 	void SetVolumn(unsigned int nVol);
 };
