@@ -6,14 +6,7 @@
 #include "audioplayer.h"
 #include "AudioPlayer.h"
 #include "afxcmn.h"
-
-
-// 自定义结构体
-//struct AddFolderThreadParam{
-//	CString Path;
-//	PVOID dlg;
-//};
-
+#include "afxwin.h"
 
 // CRadioPlayerDlg 对话框
 class CRadioPlayerDlg : public CDialogEx
@@ -37,6 +30,7 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	DECLARE_MESSAGE_MAP()
 public:
 	// TEMP
@@ -51,4 +45,13 @@ public:
 	ListArray arrMusicListPath;
 	afx_msg void OnBnClickedBtnAddfolder();
 	void AddFolderToList(CString strFilePath);
+	afx_msg void OnNMDblclkMusiclist(NMHDR *pNMHDR, LRESULT *pResult);
+	CFont TitleFont;
+	MediaStatus PlayingStatus;
+	afx_msg void OnBnClickedBtnPlay();
+	afx_msg void OnBnClickedBtnStop();
+	afx_msg void OnClose();
+	afx_msg void OnDestroy();
+	afx_msg void OnBnClickedBtnQuiet();
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 };

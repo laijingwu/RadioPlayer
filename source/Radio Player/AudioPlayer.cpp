@@ -28,15 +28,15 @@ bool CAudioPlayer::Load(HWND hWnd, CString strFilePath)
 
 
 // ²¥·Å
-void CAudioPlayer::Play(HWND hWnd, CString strFilePath)
+bool CAudioPlayer::Play(HWND hWnd, CString strFilePath)
 {
 	if(OnlyOneOpen == false){
 		if(Load(hWnd,strFilePath) == false){
-			return;
+			return false;
 		}
 	}
 	player->Play();
-	return;
+	return true;
 }
 
 
@@ -57,7 +57,7 @@ void CAudioPlayer::Resume(void)
 
 
 // Í£Ö¹
-void CAudioPlayer::Stop(bool bClose = false)
+void CAudioPlayer::Stop(bool bClose)
 {
 	player->Stop();
 	if(bClose == true){
@@ -118,7 +118,7 @@ CString CAudioPlayer::GetMediaTimeStr(void)
 
 
 // ÉèÖÃÒôÁ¿
-void CAudioPlayer::SetVolumn(unsigned int nVol)
+void CAudioPlayer::SetVolume(unsigned int nVol)
 {
 	player->SetPlayerVolume(nVol,nVol);
 	return;

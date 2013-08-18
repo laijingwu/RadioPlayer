@@ -44,6 +44,23 @@
 typedef std::vector<CString> ListArray;
 typedef std::vector<CString> MyCStringArray;
 
+// 自定义结构体
+typedef struct{
+	unsigned int Master;
+	unsigned int Player;
+}MediaVolume;
+
+typedef struct{
+	int PlayStatus;	// -1:未加载路径 0:设备就绪 1:正在播放 2:暂停
+	int ListPos;
+	CString Title;
+	CString Path;
+	CString Artist;
+	CString Length;
+	MediaVolume Vol;
+}MediaStatus;
+
+
 
 
 
