@@ -20,5 +20,7 @@ public:
 	TID3InfoExW LoadID3Ex(HWND hWnd, CString strFilePath = NULL);
 	CString GetMediaTimeStr(void);
 	void SetVolume(unsigned int nVol);
+	unsigned int GetMediaLength(void);
+	unsigned int GetMediaTime(void);
 };
 

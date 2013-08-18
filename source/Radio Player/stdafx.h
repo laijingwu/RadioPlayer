@@ -40,17 +40,19 @@
 
 #include <afxsock.h>            // MFC 套接字扩展
 
+#define WM_PROGRESS_PLAYTIME WM_USER + 1001//1012
+
 #include <vector>
 typedef std::vector<CString> ListArray;
 typedef std::vector<CString> MyCStringArray;
 
 // 自定义结构体
-typedef struct{
+struct MediaVolume{
 	unsigned int Master;
 	unsigned int Player;
-}MediaVolume;
+};
 
-typedef struct{
+struct MediaStatus{
 	int PlayStatus;	// -1:未加载路径 0:设备就绪 1:正在播放 2:暂停
 	int ListPos;
 	CString Title;
@@ -58,7 +60,14 @@ typedef struct{
 	CString Artist;
 	CString Length;
 	MediaVolume Vol;
-}MediaStatus;
+};
+
+struct Time{
+	unsigned int sec;
+	unsigned int min;
+	unsigned int hour;
+	unsigned int day;
+};
 
 
 
