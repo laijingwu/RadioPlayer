@@ -40,6 +40,10 @@
 
 #include <afxsock.h>            // MFC 套接字扩展
 
+// 皮肤
+//#include "SkinPPWTL.h"
+//#pragma comment(lib,"SkinPPWTL.lib")
+
 #define WM_PROGRESS_PLAYTIME WM_USER + 1001//1012
 
 #include <vector>
@@ -47,6 +51,11 @@ typedef std::vector<CString> ListArray;
 typedef std::vector<CString> MyCStringArray;
 
 // 自定义结构体
+struct Set_MList{
+	CString defStoreType;
+	CString defStoreName;
+};
+
 struct MediaVolume{
 	unsigned int Master;
 	unsigned int Player;
@@ -67,6 +76,10 @@ struct Time{
 	unsigned int min;
 	unsigned int hour;
 	unsigned int day;
+};
+
+struct Setting{
+	Set_MList MusicList;
 };
 
 

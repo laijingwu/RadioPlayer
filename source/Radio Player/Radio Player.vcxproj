@@ -55,6 +55,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -66,6 +68,9 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -94,6 +99,9 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="4.wav">
+      <FileType>Document</FileType>
+    </None>
     <None Include="libzplay.def" />
     <None Include="libzplay.dll" />
     <None Include="Log.txt" />
@@ -103,8 +111,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioPlayer.h" />
+    <ClInclude Include="Common.h" />
     <ClInclude Include="libzplay.h" />
-    <ClInclude Include="MusicList.h" />
     <ClInclude Include="Prog_PlayTimeProc.h" />
     <ClInclude Include="Radio Player.h" />
     <ClInclude Include="Radio PlayerDlg.h" />
@@ -114,7 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioPlayer.cpp" />
-    <ClCompile Include="MusicList.cpp" />
+    <ClCompile Include="Common.cpp" />
     <ClCompile Include="Prog_PlayTimeProc.cpp" />
     <ClCompile Include="Radio Player.cpp" />
     <ClCompile Include="Radio PlayerDlg.cpp" />

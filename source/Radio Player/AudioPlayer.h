@@ -1,7 +1,7 @@
 #pragma once
+#pragma comment(lib,"libzplay.lib")
 #include "libzplay.h"
 using namespace libZPlay;
-#pragma comment(lib,"libzplay.lib")
 
 class CAudioPlayer
 {

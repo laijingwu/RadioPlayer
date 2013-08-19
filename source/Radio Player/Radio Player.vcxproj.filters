@@ -27,6 +27,9 @@
     </None>
     <None Include="libzplay.dll" />
     <None Include="Log.txt" />
+    <None Include="4.wav">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Radio Player.h">
@@ -53,7 +56,7 @@
     <ClInclude Include="Prog_PlayTimeProc.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MusicList.h">
+    <ClInclude Include="Common.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -73,7 +76,7 @@
     <ClCompile Include="Prog_PlayTimeProc.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="MusicList.cpp">
+    <ClCompile Include="Common.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

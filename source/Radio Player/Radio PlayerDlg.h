@@ -8,7 +8,11 @@
 #include "afxcmn.h"
 #include "afxwin.h"
 #include "Prog_PlayTimeProc.h"
-#include "MusicList.h"
+#include "Common.h"
+#include "stdafx.h"
+#include <time.h>
+#include <MMSystem.h>
+#pragma comment(lib,"Winmm.lib")
 
 // CRadioPlayerDlg ¶Ô»°¿ò
 class CRadioPlayerDlg : public CDialogEx
@@ -60,4 +64,11 @@ public:
 	Time RunTime;
 	CProg_PlayTimeProc Prog_PlayTime;
 	LRESULT Prog_PlayTimeProc(WPARAM wParam, LPARAM lParam);
+	Setting PlayerSetting;
+	CCommon Common;
+	afx_msg void OnBnClickedBtnLoadlist();
+	afx_msg void OnBnClickedBtnStorelist();
+	void ChangeRadio(CString strPath);
+	afx_msg void OnBnClickedBtnLastradio();
+	afx_msg void OnBnClickedBtnNextradio();
 };
