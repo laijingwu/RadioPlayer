@@ -30,6 +30,9 @@
     <None Include="4.wav">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="1.png">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Radio Player.h">

@@ -99,6 +99,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="1.png" />
     <None Include="4.wav">
       <FileType>Document</FileType>
     </None>

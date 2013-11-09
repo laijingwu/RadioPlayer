@@ -94,6 +94,8 @@ BEGIN_MESSAGE_MAP(CRadioPlayerDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_STORELIST, &CRadioPlayerDlg::OnBnClickedBtnStorelist)
 	ON_BN_CLICKED(IDC_BTN_LASTRADIO, &CRadioPlayerDlg::OnBnClickedBtnLastradio)
 	ON_BN_CLICKED(IDC_BTN_NEXTRADIO, &CRadioPlayerDlg::OnBnClickedBtnNextradio)
+	ON_NOTIFY(NM_RCLICK, IDC_MUSICLIST, &CRadioPlayerDlg::OnNMRClickMusiclist)
+	ON_COMMAND(ID_MENU_DELETE, &CRadioPlayerDlg::OnMenuDelete)
 END_MESSAGE_MAP()
 
 
@@ -166,8 +168,10 @@ BOOL CRadioPlayerDlg::OnInitDialog()
 	SetDlgItemText(IDC_STATIC_RUNTIME,NULL);
 	SetTimer(1,1000,NULL);
 	Prog_PlayTime.SetRange(0,10000);
-	PlayerSetting.MusicList.defStoreName = L"Default";
+	PlayerSetting.MusicList.defStoreName = L"Default";	// 设置播放列表文件名称和类型
 	PlayerSetting.MusicList.defStoreType = L".mlist";
+
+	// 设置电台默认LOGO
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -211,8 +215,93 @@ void CRadioPlayerDlg::OnPaint()
 	else
 	{
 		CDialogEx::OnPaint();
+		//CImage RadioLogo;
+		//HRESULT hr = RadioLogo.Load(L"F:\\2.png");
+		//for(int i = 0; i < imgRadioLogo.GetWidth(); i++){
+		//	for(int j = 0; j < imgRadioLogo.GetHeight(); j++){
+		//		unsigned char* pucColor = reinterpret_cast<unsigned char *>(imgRadioLogo.GetPixelAddress(i,j));
+		//		pucColor[0] = pucColor[0] * pucColor[3] / 255;
+		//		pucColor[1] = pucColor[1] * pucColor[3] / 255;
+		//		pucColor[2] = pucColor[2] * pucColor[3] / 255;
+		//	}
+		//}
+		//CRect rect;
+		////int cx = imgRadioLogo.GetWidth();
+		////int cy = imgRadioLogo.GetHeight();
+		//CWnd *pWnd = GetDlgItem(IDC_RADIOLOGO);
+		//CRect winrect;
+		//pWnd->GetWindowRect(winrect);
+		//ScreenToClient(&winrect);
+		/////*pWnd->MoveWindow(rect.left,rect.top,100,100,TRUE);*/
+		//pWnd->GetClientRect(&rect);
+		//CDC *pDC = pWnd->GetDC();
+		////pDC->SetStretchBltMode(HALFTONE);
+		//int ccx = winrect.Width();
+		//int ccy = cy*ccx/cx;
+		//if(ccy > winrect.Height()){
+		//	ccy = winrect.Height();
+		//	ccx = cx*ccy/cy;
+		//}
+		//imgRadioLogo.StretchBlt(pDC->m_hDC,rect.left,rect.top,ccx,ccy,SRCCOPY);
+		//imgRadioLogo.Draw(pDC->m_hDC,rect.left,rect.top,ccx,ccy);
+		//ReleaseDC(pDC);
+
+		CWnd *pWnd = GetDlgItem(IDC_RADIOLOGO);
+		CRect IDCRect;	// 获取控件大小
+		pWnd->GetWindowRect(IDCRect);	// 获取坐标
+		ScreenToClient(&IDCRect);
+		CRect LogoRect;	// 图片大小
+		pWnd->GetClientRect(&LogoRect);	// 获取图片坐标
+		CDC *pDC = pWnd->GetDC();
+
+		HINSTANCE hInst = AfxGetResourceHandle();
+		HRSRC hRsrc = FindResource(hInst,MAKEINTRESOURCE(IDB_PNG1),TEXT("png")); // type
+
+		// 读取资源到内存
+		DWORD len = SizeofResource(hInst, hRsrc);
+		BYTE* lpRsrc = (BYTE*)LoadResource(hInst, hRsrc);
+
+		// 分配的全局内存以创建流
+		HGLOBAL m_hMem = GlobalAlloc(GMEM_FIXED, len);
+		BYTE* pmem = (BYTE*)GlobalLock(m_hMem);
+		memcpy(pmem,lpRsrc,len);
+		IStream* pstm;
+		CreateStreamOnHGlobal(m_hMem,FALSE,&pstm);
+
+		// 从流读取
+		Image* pLogoLoad = Image::FromStream(pstm);
+
+		// 释放
+		GlobalUnlock(m_hMem);
+		pstm->Release();
+		FreeResource(lpRsrc);
+
+		Graphics imgRadioLogo(*pDC);	// 创建GDI+
+		//Image* pLogoLoad = Image::FromFile(L"F:\\1.png");	// 读取文件
+		int cx = pLogoLoad->GetWidth();
+		int cy = pLogoLoad->GetHeight();
+		int ccx = IDCRect.Width();
+		int ccy = cy*ccx/cx;
+		if(ccy > IDCRect.Height()){
+			ccy = IDCRect.Height();
+			ccx = cx*ccy/cy;
+		}
+		imgRadioLogo.SetInterpolationMode(InterpolationModeHighQualityBicubic);	// 设置模式
+		//InterpolationModeInvalid          = QualityModeInvalid,    //插值无效  
+		//InterpolationModeDefault          = QualityModeDefault,    //指定默认模式  
+		//InterpolationModeLowQuality       = QualityModeLow,        //指定低质量插值法  
+		//InterpolationModeHighQuality      = QualityModeHigh,       //指定高质量插值法  
+		//InterpolationModeBilinear,                                 //指定双线性插值法  
+		//InterpolationModeBicubic,                                  //指定双三次插值法  
+		//InterpolationModeNearestNeighbor,                          //指定最临近插值法  
+		//InterpolationModeHighQualityBilinear,                      //指定高质量双线性插值法  
+		//InterpolationModeHighQualityBicubic                        //指定高质量双三次插值法  
+		
+		imgRadioLogo.DrawImage(pLogoLoad,Rect(LogoRect.left,LogoRect.top,ccx,ccy));	// 显示
+		ReleaseDC(pDC);
 	}
 }
+
 
 //当用户拖动最小化窗口时系统调用此函数取得光标
 //显示。
@@ -413,7 +502,7 @@ void CRadioPlayerDlg::OnBnClickedBtnPlay()
 		PlayingStatus.Length = ctrl_MusicList.GetItemText(0,2);
 		PlayingStatus.Artist = ctrl_MusicList.GetItemText(0,3);
 		OnBnClickedBtnPlay();
-	}else if(PlayingStatus.PlayStatus == 0){	// 设备就绪
+	}else if(PlayingStatus.PlayStatus == 0 || PlayingStatus.PlayStatus == 3){	// 设备就绪、停止
 		if(AudioPlayer.Play(this->m_hWnd,PlayingStatus.Path) == false){
 			return;
 		}
@@ -439,7 +528,7 @@ void CRadioPlayerDlg::OnBnClickedBtnPlay()
 void CRadioPlayerDlg::OnBnClickedBtnStop()
 {
 	AudioPlayer.Stop();
-	PlayingStatus.PlayStatus = 0;
+	PlayingStatus.PlayStatus = 3;
 	GetDlgItem(IDC_BTN_PLAY)->SetWindowTextW(L"Play");
 	return;
 }
@@ -472,9 +561,9 @@ void CRadioPlayerDlg::OnDestroy()
 // 静音按钮
 void CRadioPlayerDlg::OnBnClickedBtnQuiet()
 {
-	//CString tmp_strQUIET;
-	//GetDlgItemText(IDC_BTN_QUIET,tmp_strQUIET); && tmp_strQUIET.Compare(L"Silent") == 0
-	if(PlayingStatus.Vol.Master == 100){
+	CString tmp_strQUIET;
+	GetDlgItemText(IDC_BTN_QUIET,tmp_strQUIET);// && tmp_strQUIET.Compare(L"Silent") == 0   PlayingStatus.Vol.Master == 100
+	if(tmp_strQUIET.Compare(L"Silent") == 0){
 		AudioPlayer.player->SetMasterVolume(0,0);
 		PlayingStatus.Vol.Master = 0;
 		ctrl_SliderVol.SetPos(0);
@@ -506,6 +595,8 @@ void CRadioPlayerDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 		tmp_strVol.Format(L"%d%%",nVolumn);
 		SetDlgItemText(IDC_STATIC_VOLUME,tmp_strVol);
 		if(nVolumn != 0){
+			AudioPlayer.player->SetMasterVolume(100,100);
+			PlayingStatus.Vol.Master = 100;
 			GetDlgItem(IDC_BTN_QUIET)->SetWindowTextW(L"Silent");
 		}
 	}
@@ -550,6 +641,7 @@ void CRadioPlayerDlg::OnTimer(UINT_PTR nIDEvent)
 			if(AudioPlayer.GetMediaTime() == 0){
 				OnBnClickedBtnStop();
 				AudioPlayer.Stop(true);
+				// 单曲循环
 				PlayingStatus.PlayStatus = 0;
 				nMListCount = ctrl_MusicList.GetItemCount();
 				OnBnClickedBtnPlay();
@@ -694,14 +786,8 @@ void CRadioPlayerDlg::ChangeRadio(CString strPath)
 	TStreamTime pTime;
 	pTime.ms = nCurPos;
 	AudioPlayer.player->Seek(tfMillisecond,&pTime,smFromBeginning);
-	AudioPlayer.Play(this->m_hWnd,strPath);
-	PlayingStatus.PlayStatus = 1;
-	GetDlgItem(IDC_BTN_PLAY)->SetWindowTextW(L"Pause");
-	SetDlgItemText(IDC_STATIC_TITLE,PlayingStatus.Title);
-	SetTimer(2,100,NULL);
-	SetTimer(3,100,NULL);
+	OnBnClickedBtnPlay();
 	return;
-	//COleDateTime NowTime = COleDateTime::GetCurrentTime();	// 获取现在时间
 }
 
 
@@ -755,5 +841,96 @@ void CRadioPlayerDlg::OnBnClickedBtnNextradio()
 		PlayingStatus.Artist = ctrl_MusicList.GetItemText(PlayingStatus.ListPos,3);
 		ChangeRadio(PlayingStatus.Path);
 	}
+	return;
+}
+
+
+// 右击播放列表
+void CRadioPlayerDlg::OnNMRClickMusiclist(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	if(pNMItemActivate->iItem != -1){
+		CPoint point;
+		GetCursorPos(&point);
+		CMenu menu;
+		VERIFY(menu.LoadMenu(IDR_MENU_LISTRCLICK));
+		CMenu* popup = menu.GetSubMenu(0);
+		ASSERT(popup!=NULL);
+		popup->TrackPopupMenu(TPM_LEFTALIGN|TPM_RIGHTBUTTON,point.x,point.y,this);
+	}
+	*pResult = 0;
+}
+
+
+// 播放列表右键菜单删除按钮
+void CRadioPlayerDlg::OnMenuDelete()
+{
+	int nOldPlayStatus = PlayingStatus.PlayStatus;	// 函数未修改前的播放状态
+	std::vector<int> vecDelIndex;	// 得到需要删除行的序号
+	int m_nDeleteNum = 0;	// 用于删除算法
+	int nSelectCount = ctrl_MusicList.GetSelectedCount();	// 得到被选择的行数
+	POSITION pos = ctrl_MusicList.GetFirstSelectedItemPosition();	//被选择的第一行
+	while(pos){
+		vecDelIndex.push_back(ctrl_MusicList.GetNextSelectedItem(pos));	//下一行
+	}
+	for(int i = 0; i < nSelectCount; ++i){
+		//当正在播放、暂停、停止时停止播放，并关闭文件流
+		if(PlayingStatus.ListPos == vecDelIndex.at(i) && PlayingStatus.PlayStatus != -1){
+			OnBnClickedBtnStop();
+			AudioPlayer.Stop(true);
+			PlayingStatus.PlayStatus = -1;
+		}
+		//删除行、更新数组
+		ctrl_MusicList.DeleteItem(vecDelIndex.at(i) - m_nDeleteNum);
+		arrMusicListPath.erase(arrMusicListPath.begin() + (vecDelIndex.at(i) - m_nDeleteNum));
+		++m_nDeleteNum;
+	}
+	// 列表ID更新
+	int nMListCount = ctrl_MusicList.GetItemCount();
+	CString m_strID;
+	for(int m = 0; m < nMListCount; ++m){
+		m_strID.Format(L"%d",m + 1);
+		ctrl_MusicList.SetItemText(m,0,m_strID);
+	}
+	// 列表Pos移动 播放
+	if(nMListCount <= 0){	// 列表无项目
+		SetDlgItemText(IDC_STATIC_TITLE,L"Radio Player");
+		PlayingStatus.PlayStatus = -1;	// 未载入路径状态
+		PlayingStatus.ListPos = 0;
+		PlayingStatus.Path = L"";
+		PlayingStatus.Title = L"";
+		PlayingStatus.Length = L"00:00";
+		PlayingStatus.Artist = L"";
+	}else if(nMListCount > 0 && nOldPlayStatus != -1){
+		int nBuf = 0;
+		std::vector<int>::iterator iterDelIndex;
+		for(iterDelIndex = vecDelIndex.begin(); iterDelIndex != vecDelIndex.end(); ++iterDelIndex){
+			if(PlayingStatus.ListPos == *iterDelIndex){
+				PlayingStatus.ListPos--;
+			}
+			if(PlayingStatus.ListPos > *iterDelIndex){
+				++nBuf;
+			}
+		}
+		if(PlayingStatus.ListPos < 0){	// 列表Pos到顶
+			PlayingStatus.ListPos = 0;
+		}else{
+			PlayingStatus.ListPos -= nBuf;
+			// 设置选中
+			ctrl_MusicList.SetItemState(PlayingStatus.ListPos,LVNI_SELECTED,LVNI_SELECTED);
+		}
+		PlayingStatus.PlayStatus = 0;
+		PlayingStatus.Path = arrMusicListPath.at(PlayingStatus.ListPos);
+		PlayingStatus.Title = ctrl_MusicList.GetItemText(PlayingStatus.ListPos,1);
+		PlayingStatus.Length = ctrl_MusicList.GetItemText(PlayingStatus.ListPos,2);
+		PlayingStatus.Artist = ctrl_MusicList.GetItemText(PlayingStatus.ListPos,3);
+		if(nOldPlayStatus != 3){	// 正在播放、暂停时自动播放
+			Sleep(1);
+			OnBnClickedBtnPlay();
+		}else{	// 停止时只更新标题显示
+			SetDlgItemText(IDC_STATIC_TITLE,PlayingStatus.Title);
+		}
+	}
+	vecDelIndex.clear();
 	return;
 }

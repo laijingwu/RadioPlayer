@@ -71,4 +71,6 @@ public:
 	void ChangeRadio(CString strPath);
 	afx_msg void OnBnClickedBtnLastradio();
 	afx_msg void OnBnClickedBtnNextradio();
+	afx_msg void OnNMRClickMusiclist(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnMenuDelete();
 };

@@ -23,10 +23,12 @@ public:
 // 重写
 public:
 	virtual BOOL InitInstance();
+	ULONG_PTR m_pGdiToken;	// GDI+环境
 
 // 实现
 
 	DECLARE_MESSAGE_MAP()
+	virtual int ExitInstance();
 };
 
 extern CRadioPlayerApp theApp;

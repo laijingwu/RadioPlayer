@@ -50,6 +50,9 @@ BOOL CRadioPlayerApp::InitInstance()
 	InitCommonControlsEx(&InitCtrls);
 
 	CWinApp::InitInstance();
+	// 初始化GDI+环境
+	GdiplusStartupInput m_gdiplusStartupInput;
+	GdiplusStartup(&m_pGdiToken,&m_gdiplusStartupInput,NULL);
 
 	if (!AfxSocketInit())
 	{
@@ -97,3 +100,11 @@ BOOL CRadioPlayerApp::InitInstance()
 	return FALSE;
 }
 
+
+
+int CRadioPlayerApp::ExitInstance()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	GdiplusShutdown(m_pGdiToken);	// 卸载GDI+环境
+	return CWinApp::ExitInstance();
+}

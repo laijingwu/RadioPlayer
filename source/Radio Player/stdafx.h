@@ -43,6 +43,11 @@
 // 皮肤
 //#include "SkinPPWTL.h"
 //#pragma comment(lib,"SkinPPWTL.lib")
+// GDI库
+#include <comdef.h>	// 初始化COM
+#include "GdiPlus.h"	// GDI+头文件
+using namespace Gdiplus;//使用Gdiplus名字空间
+
 
 #define WM_PROGRESS_PLAYTIME WM_USER + 1001//1012
 
@@ -62,7 +67,7 @@ struct MediaVolume{
 };
 
 struct MediaStatus{
-	int PlayStatus;	// -1:未加载路径 0:设备就绪 1:正在播放 2:暂停
+	int PlayStatus;	// -1:未加载路径 0:设备就绪 1:正在播放 2:暂停 3:停止
 	int ListPos;
 	CString Title;
 	CString Path;
