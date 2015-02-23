@@ -36,7 +36,7 @@ END_MESSAGE_MAP()
 void CProg_PlayTimeProc::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	CRadioPlayerDlg *pDlg = (CRadioPlayerDlg*)AfxGetMainWnd();
-	if(pDlg->PlayingStatus.PlayStatus == 1){
+	if (pDlg->CurrentPlayStatus.PlayerStatus == 1){
 		AfxGetMainWnd()->KillTimer(3);
 		DWORD nPos = GetPos();
 		int nRangeMin,nRangeMax;
@@ -56,7 +56,7 @@ void CProg_PlayTimeProc::OnLButtonUp(UINT nFlags, CPoint point)
 void CProg_PlayTimeProc::OnMouseMove(UINT nFlags, CPoint point)
 {
 	CRadioPlayerDlg *pDlg = (CRadioPlayerDlg*)AfxGetMainWnd();
-	if(pDlg->PlayingStatus.PlayStatus == 1 && nFlags == MK_LBUTTON){
+	if (pDlg->CurrentPlayStatus.PlayerStatus == 1 && nFlags == MK_LBUTTON){
 		AfxGetMainWnd()->KillTimer(3);
 		DWORD nPos = GetPos();
 		int nRangeMin,nRangeMax;

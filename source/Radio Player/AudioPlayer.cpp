@@ -5,7 +5,8 @@ CAudioPlayer::CAudioPlayer(void)
 	: OnlyOneOpen(false)
 {
 	player = CreateZPlay();
-	player->SetMasterVolume(100,100);
+	player->SetMasterVolume(100, 100);
+	player->SetPlayerVolume(100, 100);
 }
 
 
@@ -120,7 +121,8 @@ CString CAudioPlayer::GetMediaTimeStr(void)
 // ÉèÖÃÒôÁ¿
 void CAudioPlayer::SetVolume(unsigned int nVol)
 {
-	player->SetPlayerVolume(nVol,nVol);
+	//player->SetPlayerVolume(nVol, nVol);	// ÑÓ³Ù
+	player->SetMasterVolume(nVol,nVol);
 	return;
 }
 

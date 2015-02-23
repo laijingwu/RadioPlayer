@@ -40,20 +40,24 @@
 
 #include <afxsock.h>            // MFC 套接字扩展
 
+#include "Resource.h"
+
 // 皮肤
 //#include "SkinPPWTL.h"
 //#pragma comment(lib,"SkinPPWTL.lib")
+#include <shobjidl.h> 
+#include <Strsafe.h>
 // GDI库
 #include <comdef.h>	// 初始化COM
 #include "GdiPlus.h"	// GDI+头文件
 using namespace Gdiplus;//使用Gdiplus名字空间
 
 
-#define WM_PROGRESS_PLAYTIME WM_USER + 1001//1012
+#define WM_PROGRESS_PLAYTIME WM_USER + 1001
 
 #include <vector>
-typedef std::vector<CString> ListArray;
-typedef std::vector<CString> MyCStringArray;
+//typedef std::vector<CString> ListArray;
+//typedef std::vector<CString> CStringArray;
 
 // 自定义结构体
 struct Set_MList{
@@ -62,29 +66,37 @@ struct Set_MList{
 };
 
 struct MediaVolume{
-	unsigned int Master;
-	unsigned int Player;
-};
-
-struct MediaStatus{
-	int PlayStatus;	// -1:未加载路径 0:设备就绪 1:正在播放 2:暂停 3:停止
-	int ListPos;
-	CString Title;
-	CString Path;
-	CString Artist;
-	CString Length;
-	MediaVolume Vol;
+	unsigned int Master = 0;
+	unsigned int Player = 0;	// 丢弃
+	unsigned int Real = 0;
 };
 
 struct Time{
-	unsigned int sec;
-	unsigned int min;
-	unsigned int hour;
-	unsigned int day;
+	unsigned int Sec = 0;
+	unsigned int Min = 0;
+	unsigned int Hour = 0;
+	unsigned int Day = 0;
 };
 
 struct Setting{
 	Set_MList MusicList;
+};
+
+struct MusicInformed
+{
+	CString MusicTitle;
+	CString MusicLength;
+	CString MusicAuthor;
+	CString MusicPath;
+};
+
+typedef std::vector<MusicInformed> MusicListArr;
+
+struct MediaStatus{
+	int PlayerStatus = -1;	// -1:未加载路径 0:设备就绪 1:正在播放 2:暂停 3:停止
+	int ListPos = 0;	// 按数组顺序，从0开始
+	MusicInformed Informed;
+	MediaVolume Vol;
 };
 
 

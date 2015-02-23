@@ -27,10 +27,13 @@
     </None>
     <None Include="libzplay.dll" />
     <None Include="Log.txt" />
-    <None Include="4.wav">
+    <None Include="res\cursor1.cur">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="1.png">
+    <None Include="res\cursor2.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Hand.cur">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
@@ -62,6 +65,12 @@
     <ClInclude Include="Common.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Ctrl_PlayList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskBar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Radio Player.cpp">
@@ -82,6 +91,12 @@
     <ClCompile Include="Common.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Ctrl_PlayList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskBar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Radio Player.rc">
@@ -90,5 +105,18 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="libzplay.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="res\4.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\1.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\icon3.ico">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

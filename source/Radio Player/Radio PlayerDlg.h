@@ -3,7 +3,6 @@
 //
 
 #pragma once
-#include "audioplayer.h"
 #include "AudioPlayer.h"
 #include "afxcmn.h"
 #include "afxwin.h"
@@ -13,6 +12,8 @@
 #include <time.h>
 #include <MMSystem.h>
 #pragma comment(lib,"Winmm.lib")
+#include "Ctrl_PlayList.h"
+#include "TaskBar.h"
 
 // CRadioPlayerDlg 对话框
 class CRadioPlayerDlg : public CDialogEx
@@ -37,23 +38,28 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg LRESULT MessageFromListCtrl(WPARAM wParam, LPARAM lParam); 	/*声明自定义的消息响应函数*/
 	DECLARE_MESSAGE_MAP()
 public:
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+	CTaskBar *m_pProgressTaskBar;
+	afx_msg LRESULT OnCreateTaskBar(WPARAM wParam, LPARAM lParam);
 	// TEMP
 	CString tmp_strAddFolderPath;
 
 	afx_msg void OnBnClickedBtnAbout();
 	afx_msg void OnBnClickedBtnExit();
 	CAudioPlayer AudioPlayer;
-	CListCtrl ctrl_MusicList;
+	CCtrl_PlayList ctrl_MusicList;
 	CSliderCtrl ctrl_SliderVol;
 	afx_msg void OnBnClickedBtnAddfile();
-	ListArray arrMusicListPath;
+	//ListArray arrMusicListPath;
+	MusicListArr RadioList;	// 新增
 	afx_msg void OnBnClickedBtnAddfolder();
 	void AddFolderToList(CString strFilePath);
 	afx_msg void OnNMDblclkMusiclist(NMHDR *pNMHDR, LRESULT *pResult);
 	CFont TitleFont;
-	MediaStatus PlayingStatus;
+	MediaStatus CurrentPlayStatus;
 	afx_msg void OnBnClickedBtnPlay();
 	afx_msg void OnBnClickedBtnStop();
 	afx_msg void OnClose();
@@ -62,7 +68,7 @@ public:
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	Time RunTime;
-	CProg_PlayTimeProc Prog_PlayTime;
+	CProg_PlayTimeProc prog_PlayTime;
 	LRESULT Prog_PlayTimeProc(WPARAM wParam, LPARAM lParam);
 	Setting PlayerSetting;
 	CCommon Common;
@@ -73,4 +79,6 @@ public:
 	afx_msg void OnBnClickedBtnNextradio();
 	afx_msg void OnNMRClickMusiclist(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnMenuDelete();
+	void PrintRadioLogo(BYTE * byData, unsigned int unSize);
+	bool AddToList(CString strPath);
 };

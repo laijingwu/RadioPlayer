@@ -35,21 +35,22 @@ void CCommon::MusicListSerialize(CArchive &ar)
 {
 	// 初始化主窗口类
 	CRadioPlayerDlg *pDlg = (CRadioPlayerDlg*)AfxGetMainWnd();
-	ListArray::size_type m_strSize;
-	ListArray::iterator iterList;
-	m_strSize = pDlg->arrMusicListPath.size();
+	MusicListArr::size_type m_strSize;
+	MusicListArr::iterator iterList;
+	m_strSize = pDlg->RadioList.size();
 	unsigned int nSize;
 	nSize = m_strSize;
 	if(ar.IsStoring()){	// 储存
 		ar<<nSize;
-		for(iterList = pDlg->arrMusicListPath.begin(); iterList != pDlg->arrMusicListPath.end(); iterList++){
-			ar<<*iterList;
+		for (iterList = pDlg->RadioList.begin(); iterList != pDlg->RadioList.end(); iterList++){
+			ar<<(*iterList).MusicPath;
 		}
 	}else{	//读取
 		ar>>nSize;
 		for(int i = 0; i != nSize; ++i){
-			pDlg->arrMusicListPath.push_back(L"");
-			ar>>pDlg->arrMusicListPath[i];
+			CString strPath;
+			ar >> strPath;
+			pDlg->AddToList(strPath);
 		}
 	}
 }
@@ -78,14 +79,17 @@ bool CCommon::StoreMusicList(CString strListPath)
 CString CCommon::GetCurrWorkingDir(void)
 {
 	CString strPath;
-	TCHAR szFull[_MAX_PATH];
-	TCHAR szDrive[_MAX_DRIVE];
-	TCHAR szDir[_MAX_DIR];
-	::GetModuleFileName(NULL, szFull, sizeof(szFull)/sizeof(TCHAR));
-	_tsplitpath(szFull, szDrive, szDir, NULL, NULL);
-	_tcscpy(szFull, szDrive);
-	_tcscat(szFull, szDir);
-	strPath = CString(szFull);
+	wchar_t szwRoot[_MAX_PATH];
+	wchar_t szwFull[_MAX_PATH];
+	wchar_t szwDrive[_MAX_DRIVE];
+	wchar_t szwDir[_MAX_DIR];
+	wchar_t szwFName[_MAX_FNAME];
+	wchar_t szwExt[_MAX_EXT];
+	GetModuleFileName(NULL, szwFull, sizeof(szwFull) / sizeof(wchar_t));
+	_wsplitpath_s(szwFull, szwDrive, _MAX_DRIVE, szwDir, _MAX_DIR, szwFName, _MAX_FNAME, szwExt, _MAX_EXT);
+	wcscpy_s(szwRoot, _MAX_DRIVE, szwDrive);
+	wcscat_s(szwRoot, _MAX_DIR, szwDir);
+	strPath = CString(szwRoot);
 	return strPath;
 }
 

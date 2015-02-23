@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,6 +21,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Static</UseOfMfc>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -28,6 +29,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Static</UseOfMfc>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -99,20 +101,20 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="1.png" />
-    <None Include="4.wav">
-      <FileType>Document</FileType>
-    </None>
     <None Include="libzplay.def" />
     <None Include="libzplay.dll" />
     <None Include="Log.txt" />
     <None Include="ReadMe.txt" />
+    <None Include="res\cursor1.cur" />
+    <None Include="res\cursor2.cur" />
+    <None Include="res\Hand.cur" />
     <None Include="res\Radio Player.ico" />
     <None Include="res\RadioPlayer.rc2" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioPlayer.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="Ctrl_PlayList.h" />
     <ClInclude Include="libzplay.h" />
     <ClInclude Include="Prog_PlayTimeProc.h" />
     <ClInclude Include="Radio Player.h" />
@@ -120,10 +122,12 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TaskBar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioPlayer.cpp" />
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="Ctrl_PlayList.cpp" />
     <ClCompile Include="Prog_PlayTimeProc.cpp" />
     <ClCompile Include="Radio Player.cpp" />
     <ClCompile Include="Radio PlayerDlg.cpp" />
@@ -131,12 +135,20 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TaskBar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Radio Player.rc" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libzplay.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="res\4.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\1.png" />
+    <Image Include="res\icon3.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
