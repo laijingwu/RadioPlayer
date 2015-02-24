@@ -53,6 +53,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -82,6 +83,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -148,7 +150,18 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\1.png" />
+    <Image Include="res\bfzn_001.ico" />
+    <Image Include="res\bfzn_002.ico" />
+    <Image Include="res\bfzn_003.ico" />
+    <Image Include="res\bfzn_006.ico" />
     <Image Include="res\icon3.ico" />
+    <Image Include="res\last.ico" />
+    <Image Include="res\music.ico" />
+    <Image Include="res\music1.ico" />
+    <Image Include="res\next.ico" />
+    <Image Include="res\pause.ico" />
+    <Image Include="res\play.ico" />
+    <Image Include="res\stop.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

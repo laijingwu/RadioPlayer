@@ -20,5 +20,19 @@ public:
 	CString m_csDescription;
 public:
 	void Click(WPARAM wParam);
+	void SetTip(LPCWSTR pwszTip);
+	void SetProgState(TBPFLAG tbp_flag);
+	void SetIcon(HICON g_hIcon = NULL);
+	void UpdateButton(UINT cButtons, LPTHUMBBUTTON pButton);
+	void SetProgPos(ULONG ulPos, ULONG ulMax);
+	void SetPlayState(CString strTitle);
+	HICON g_hBarPlayIcon;
+	HICON g_hBarPauseIcon;
+	HICON g_hBtnL;
+	HICON g_hBtnMPlay;
+	HICON g_hBtnMPause;
+	HICON g_hBtnR;
+	void SetPauseState();
+	void SetStopState();
 };
 

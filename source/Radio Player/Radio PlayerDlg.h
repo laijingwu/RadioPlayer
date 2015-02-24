@@ -53,8 +53,7 @@ public:
 	CCtrl_PlayList ctrl_MusicList;
 	CSliderCtrl ctrl_SliderVol;
 	afx_msg void OnBnClickedBtnAddfile();
-	//ListArray arrMusicListPath;
-	MusicListArr RadioList;	// ÐÂÔö
+	MusicListArr RadioList;
 	afx_msg void OnBnClickedBtnAddfolder();
 	void AddFolderToList(CString strFilePath);
 	afx_msg void OnNMDblclkMusiclist(NMHDR *pNMHDR, LRESULT *pResult);
@@ -81,4 +80,7 @@ public:
 	afx_msg void OnMenuDelete();
 	void PrintRadioLogo(BYTE * byData, unsigned int unSize);
 	bool AddToList(CString strPath);
+	void RefMusicList();
+	OSInformed GetOSVersion();
+	OSInformed OSVersion;
 };

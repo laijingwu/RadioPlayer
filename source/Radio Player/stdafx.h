@@ -99,7 +99,30 @@ struct MediaStatus{
 	MediaVolume Vol;
 };
 
+struct OSbuild
+{
+	CString Win8_1 = L"Windows 8.1";
+	CString Server2012_R2 = L"Windows Server 2012 R2";
+	CString Server2012 = L"Windows Server 2012";
+	CString Win8 = L"Windows 8";
+	CString Win7 = L"Windows 7";
+	CString Server2008_R2 = L"Windows Server 2008 R2";
+	CString Server2008 = L"Windows Server 2008";
+	CString WinVista = L"Windows Vista";
+	CString Server2003_R2 = L"Windows Server 2003 R2";
+	CString Server2003 = L"Windows Server 2003";
+	CString WinXP = L"Windows XP";
+	CString Win2000 = L"Windows 2000";
+	CString Win98 = L"Windows 98ªÚNT";
+};
 
+struct OSInformed
+{
+	CString VersionTitle;
+	unsigned int Major;
+	unsigned int Minor;
+	bool WorkStation;
+};
 
 
 

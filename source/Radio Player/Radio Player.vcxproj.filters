@@ -118,5 +118,38 @@
     <Image Include="res\icon3.ico">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\bfzn_001.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bfzn_002.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bfzn_003.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bfzn_006.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\music.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\music1.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\play.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\last.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\next.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\pause.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\stop.ico">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

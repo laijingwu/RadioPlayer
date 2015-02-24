@@ -7,6 +7,8 @@
 #include "Radio PlayerDlg.h"
 #include "afxdialogex.h"
 
+#pragma warning(disable: 4996)    
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -29,6 +31,8 @@ protected:
 	// 实现
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedBtnSite();
 };
 
 
@@ -51,6 +55,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+	ON_BN_CLICKED(IDC_BTN_SITE, &CAboutDlg::OnBnClickedBtnSite)
 END_MESSAGE_MAP()
 
 
@@ -135,6 +140,7 @@ BOOL CRadioPlayerDlg::OnInitDialog()
 
 	// 加载皮肤
 	//skinppLoadSkin("skin/spring.ssk");
+	OSVersion = GetOSVersion();
 	// 音乐列表控件设置
 	ctrl_MusicList.SetExtendedStyle(LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES);	// 设置点选整行、显示线框
 	LVCOLUMN lvColumn;
@@ -490,6 +496,8 @@ void CRadioPlayerDlg::OnBnClickedBtnPlay()
 
 		CurrentPlayStatus.PlayerStatus = 1;
 		GetDlgItem(IDC_BTN_PLAY)->SetWindowTextW(L"Pause");
+		if (OSVersion.Major >= 6 && OSVersion.Minor >= 1)
+			m_pProgressTaskBar->SetPlayState(CurrentPlayStatus.Informed.MusicTitle);
 		SetDlgItemText(IDC_STATIC_TITLE, CurrentPlayStatus.Informed.MusicTitle);
 		SetTimer(2,100,NULL);
 		SetTimer(3,100,NULL);
@@ -498,11 +506,15 @@ void CRadioPlayerDlg::OnBnClickedBtnPlay()
 		AudioPlayer.Pause();
 		CurrentPlayStatus.PlayerStatus = 2;
 		GetDlgItem(IDC_BTN_PLAY)->SetWindowTextW(L"Play");
+		if (OSVersion.Major >= 6 && OSVersion.Minor >= 1)
+			m_pProgressTaskBar->SetPauseState();
 	}
 	else if (CurrentPlayStatus.PlayerStatus == 2){	// 暂停
 		AudioPlayer.Resume();
 		CurrentPlayStatus.PlayerStatus = 1;
 		GetDlgItem(IDC_BTN_PLAY)->SetWindowTextW(L"Pause");
+		if (OSVersion.Major >= 6 && OSVersion.Minor >= 1)
+			m_pProgressTaskBar->SetPlayState(CurrentPlayStatus.Informed.MusicTitle);
 	}
 	return;
 }
@@ -514,6 +526,8 @@ void CRadioPlayerDlg::OnBnClickedBtnStop()
 	AudioPlayer.Stop();
 	CurrentPlayStatus.PlayerStatus = 3;
 	GetDlgItem(IDC_BTN_PLAY)->SetWindowTextW(L"Play");
+	if (OSVersion.Major >= 6 && OSVersion.Minor >= 1)
+		m_pProgressTaskBar->SetStopState();
 	return;
 }
 
@@ -650,11 +664,12 @@ void CRadioPlayerDlg::OnTimer(UINT_PTR nIDEvent)
 		break;
 	case 3:
 		// 进度条走动
-		unsigned int s = AudioPlayer.GetMediaTime();
-		unsigned int ss = AudioPlayer.GetMediaLength();
-		float fDiffer = (float)(AudioPlayer.GetMediaTime() / AudioPlayer.GetMediaLength());
-		int nPosProg = (int)(fDiffer * 10000);
+		float fTime = (float)AudioPlayer.GetMediaTime();
+		float fLength = (float)AudioPlayer.GetMediaLength();
+		int nPosProg = (int)((fTime / fLength) * 10000);
 		prog_PlayTime.SetPos(nPosProg);
+		if (OSVersion.Major >= 6 && OSVersion.Minor >= 1)
+			m_pProgressTaskBar->SetProgPos(nPosProg, 10000);
 		break;
 	}
 	CDialogEx::OnTimer(nIDEvent);
@@ -829,12 +844,8 @@ void CRadioPlayerDlg::OnMenuDelete()
 		++m_nDeleteNum;
 	}
 	// 列表ID更新
+	RefMusicList();
 	int nMListCount = ctrl_MusicList.GetItemCount();
-	CString m_strID;
-	for(int m = 0; m < nMListCount; ++m){
-		m_strID.Format(L"%d",m + 1);
-		ctrl_MusicList.SetItemText(m,0,m_strID);
-	}
 	// 列表Pos移动 播放
 	if(nMListCount <= 0){	// 列表无项目
 		SetDlgItemText(IDC_STATIC_TITLE,L"Radio Player");
@@ -926,58 +937,85 @@ void CRadioPlayerDlg::PrintRadioLogo(BYTE * byData, unsigned int unSize)
 }
 
 
+// 播放列表拖动
 LRESULT CRadioPlayerDlg::MessageFromListCtrl(WPARAM wParam, LPARAM lParam)
 {
 	if (wParam == LBUTTON_UP)
 	{
 		//handle the left button up message
 		TRACE("left button up message");
-
 		return 0;
 	}
-	//TRACE(wParam,lParam);
 
-	int src = wParam;
-	int des = lParam;
-
+	int nSrc = wParam; // 起始行
+	int nDes = lParam;	// 目标行
+	int nPlayPos = CurrentPlayStatus.ListPos;
 	//暂存要移动的项
-	CString strUid = ctrl_MusicList.GetItemText(src, 0);
-	CString strName = ctrl_MusicList.GetItemText(src, 1);
-	CString strTime = ctrl_MusicList.GetItemText(src, 2);
-	CString strAuthor = ctrl_MusicList.GetItemText(src, 3);
+	int nListPos = nDes;
+	CString m_strCount;
+	if (nDes > nSrc)
+		nListPos--;
+	m_strCount.Format(L"%d", nListPos);
 
-	if (des>src)
+	CString strName = RadioList[nSrc].MusicTitle;
+	CString strTime = RadioList[nSrc].MusicLength;
+	CString strAuthor = RadioList[nSrc].MusicAuthor;
+
+	if (nDes > nSrc)
 	{
+		MusicListArr::iterator iterDes = RadioList.begin() + nDes;
+		RadioList.insert(iterDes, RadioList[nSrc]);
+		MusicListArr::iterator iterSrc = RadioList.begin() + nSrc;
+		RadioList.erase(iterSrc);
+
 		//将item移到要插入的位置
-		int nRow = ctrl_MusicList.InsertItem(des, strUid, 0);//插入1行"11"代表第0列的数据 参数(行数,标题,图标索引)
-		ctrl_MusicList.SetItemText(nRow, 1, strName);	//设置第一列数据
+		int nRow = ctrl_MusicList.InsertItem(nDes, m_strCount, 0);//插入1行代表第0列的数据 参数(行数,标题,图标索引)
+		ctrl_MusicList.SetItemText(nRow, 1, strName);	//设置第1列数据
 		ctrl_MusicList.SetItemText(nRow, 2, strTime);	//设置第2列数据
 		ctrl_MusicList.SetItemText(nRow, 3, strAuthor);	//设置第3列数据
-
+		
 		//删除要移动的项
-		ctrl_MusicList.DeleteItem(src);
+		ctrl_MusicList.DeleteItem(nSrc);
+		if (nPlayPos < nDes && nPlayPos > nSrc)
+			nPlayPos--;
 	}
 	else
 	{
+		MusicListArr::iterator iterDes = RadioList.begin() + nDes;
+		RadioList.insert(iterDes, RadioList[nSrc]);
+		MusicListArr::iterator iterSrc = RadioList.begin() + nSrc + 1;
+		RadioList.erase(iterSrc);
 		//删除要移动的项
-		ctrl_MusicList.DeleteItem(src);
-
+		ctrl_MusicList.DeleteItem(nSrc);
+		
 		//将item移到要插入的位置
-		int nRow = ctrl_MusicList.InsertItem(des, strUid, 0);//插入1行"11"代表第0列的数据 参数(行数,标题,图标索引)
-		ctrl_MusicList.SetItemText(nRow, 1, strName);	//设置第一列数据
+		int nRow = ctrl_MusicList.InsertItem(nDes, m_strCount, 0);//插入1行代表第0列的数据 参数(行数,标题,图标索引)
+		ctrl_MusicList.SetItemText(nRow, 1, strName);	//设置第1列数据
 		ctrl_MusicList.SetItemText(nRow, 2, strTime);	//设置第2列数据
 		ctrl_MusicList.SetItemText(nRow, 3, strAuthor);	//设置第3列数据
+		if (nPlayPos > nDes && nPlayPos < nSrc)
+			nPlayPos++;
 	}
 
-	if (des>src)
-		des--;
-	ctrl_MusicList.EnsureVisible(des, FALSE);	//让item在可见范围内
-	ctrl_MusicList.SetItemState(des, LVIS_SELECTED, LVIS_SELECTED);	//高亮item
+	if (nDes > nSrc)
+		nDes--;
+
+	if (nPlayPos < 0)
+		nPlayPos = 0;
+
+	if (CurrentPlayStatus.ListPos == nSrc)	// 拖动行为正在播放行
+		CurrentPlayStatus.ListPos = nDes;
+	else
+		CurrentPlayStatus.ListPos = nPlayPos;
+	RefMusicList();	// 列表ID刷新
+	ctrl_MusicList.EnsureVisible(nDes, FALSE);	//让item在可见范围内
+	ctrl_MusicList.SetItemState(nDes, LVIS_SELECTED, LVIS_SELECTED);	//高亮item
 
 	return 0;
 }
 
 
+// 添加文件至数组
 bool CRadioPlayerDlg::AddToList(CString strPath)
 {
 	CAudioPlayer m_AddFile;
@@ -985,24 +1023,28 @@ bool CRadioPlayerDlg::AddToList(CString strPath)
 	wchar_t wFileName[_MAX_FNAME];
 	int nListCount = 0;
 	TID3InfoExW m_id3_info;
-	MusicInformed NewAddMusic = { NULL, L"00:00", NULL, NULL };
+	MusicInformed NewAddMusic = { NULL, L"00:00", L"-", NULL };
 
 	nListCount = ctrl_MusicList.GetItemCount();
 	m_strCount.Format(L"%d", nListCount + 1);
 	NewAddMusic.MusicPath = strPath;
 	_wsplitpath_s(NewAddMusic.MusicPath, NULL, 0, NULL, 0, wFileName, _MAX_FNAME, NULL, 0);	// 通过路径获取文件名
 	NewAddMusic.MusicTitle = wFileName;
-	//RadioList.push_back(NewAddMusic.MusicPath);	// 添加路径到数组
 
 	if (m_AddFile.Load(this->m_hWnd, NewAddMusic.MusicPath) == false)
 		return false;
 	NewAddMusic.MusicLength = m_AddFile.GetMediaLengthStr();
 
 	m_id3_info = m_AddFile.LoadID3Ex(this->m_hWnd);
-	if (m_id3_info.Title){
-		//m_strFileName.Format(L"%s - %s", m_id3_info.Title, m_id3_info.Artist);
-		NewAddMusic.MusicTitle = m_id3_info.Title;	// m_strFileName
-		NewAddMusic.MusicAuthor = m_id3_info.Artist;
+	if (m_id3_info.Title != NULL){
+		if (isprint(m_id3_info.Title[0]))
+			NewAddMusic.MusicTitle = m_id3_info.Title;
+	}
+	//m_strFileName.Format(L"%s - %s", m_id3_info.Title, m_id3_info.Artist);
+
+	if (m_id3_info.Artist != NULL){
+		if (isprint(m_id3_info.Artist[0]))
+			NewAddMusic.MusicAuthor = m_id3_info.Artist;
 	}
 
 	ctrl_MusicList.InsertItem(nListCount, m_strCount);
@@ -1017,22 +1059,111 @@ bool CRadioPlayerDlg::AddToList(CString strPath)
 }
 
 
+// 响应Win7任务栏
 LRESULT	CRadioPlayerDlg::OnCreateTaskBar(WPARAM wParam, LPARAM lParam)
 {
-	m_pProgressTaskBar = new CTaskBar(GetSafeHwnd());
-	m_pProgressTaskBar->Init();
+	// 判断任务栏是否可用
+	OSVersion = GetOSVersion();
+	if (OSVersion.Major >= 6 && OSVersion.Minor >= 1)
+	{
+		m_pProgressTaskBar = new CTaskBar(GetSafeHwnd());
+		m_pProgressTaskBar->Init();
+	}
 	return 0;
 }
 
 
+// 消息函数
 LRESULT CRadioPlayerDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	// TODO:  在此添加专用代码和/或调用基类
-	if (HIWORD(wParam) == THBN_CLICKED)
-	{
-		m_pProgressTaskBar->Click(wParam);
-		return 0;
+	if (OSVersion.Major >= 6 && OSVersion.Minor >= 1){
+		if (HIWORD(wParam) == THBN_CLICKED)
+		{
+			m_pProgressTaskBar->Click(wParam);
+			return 0;
+		}
 	}
 	//::SendMessage(this->m_hWnd, WM_ARGS_RECEIVED, wParam, lParam);
 	return CDialogEx::WindowProc(message, wParam, lParam);
+}
+
+
+// 列表ID更新
+void CRadioPlayerDlg::RefMusicList()
+{
+	int nListCount = ctrl_MusicList.GetItemCount();
+	CString m_strID;
+	for (int i = 0; i < nListCount; ++i){
+		m_strID.Format(L"%d", i + 1);
+		ctrl_MusicList.SetItemText(i, 0, m_strID);
+	}
+}
+
+
+void CAboutDlg::OnBnClickedBtnSite()
+{
+	// 打开官网
+	ShellExecute(this->m_hWnd, L"open", L"http://www.laijingwu.com", NULL, NULL, SW_SHOWNORMAL);
+}
+
+
+// 检测系统版本
+OSInformed CRadioPlayerDlg::GetOSVersion()
+{
+	OSVERSIONINFOEX Os_WindVerInfoEx;  // 版本信息 
+	int inR2;  // 版本信息 
+	Os_WindVerInfoEx.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	GetVersionEx((OSVERSIONINFO *)&Os_WindVerInfoEx); // 注意转换类型 
+	inR2 = GetSystemMetrics(SM_SERVERR2);
+	OSbuild pOS;
+	CString  pszOS;
+
+	if (Os_WindVerInfoEx.dwPlatformId == VER_PLATFORM_WIN32_NT)
+	{
+		if (Os_WindVerInfoEx.dwMajorVersion <= 4)
+			pszOS = pOS.Win98;
+		switch (Os_WindVerInfoEx.dwMajorVersion)
+		{
+		case 5:
+			if (Os_WindVerInfoEx.dwMinorVersion == 0)
+				pszOS = pOS.Win2000;
+			if (Os_WindVerInfoEx.dwMinorVersion == 1)
+				pszOS = pOS.WinXP;
+			if ((Os_WindVerInfoEx.dwMinorVersion == 2) && (inR2 == 0))
+				pszOS = pOS.Server2003;
+			if ((Os_WindVerInfoEx.dwMinorVersion == 2) && (inR2 != 0))
+				pszOS = pOS.Server2003_R2;
+			break;
+		case 6:
+			if ((Os_WindVerInfoEx.dwMinorVersion == 0) && (Os_WindVerInfoEx.wProductType == VER_NT_WORKSTATION))
+				pszOS = pOS.WinVista;
+			if ((Os_WindVerInfoEx.dwMinorVersion == 0) && (Os_WindVerInfoEx.wProductType != VER_NT_WORKSTATION))
+				pszOS = pOS.Server2008;
+			if ((Os_WindVerInfoEx.dwMinorVersion == 1) && (Os_WindVerInfoEx.wProductType == VER_NT_WORKSTATION))
+				pszOS = pOS.Win7;
+			if ((Os_WindVerInfoEx.dwMinorVersion == 1) && (Os_WindVerInfoEx.wProductType != VER_NT_WORKSTATION))
+				pszOS = pOS.Server2008_R2;
+			if ((Os_WindVerInfoEx.dwMinorVersion == 2) && (Os_WindVerInfoEx.wProductType == VER_NT_WORKSTATION))
+				pszOS = pOS.Win8;
+			if ((Os_WindVerInfoEx.dwMinorVersion == 2) && (Os_WindVerInfoEx.wProductType != VER_NT_WORKSTATION))
+				pszOS = pOS.Server2012;
+			if ((Os_WindVerInfoEx.dwMinorVersion == 3) && (Os_WindVerInfoEx.wProductType == VER_NT_WORKSTATION))
+				pszOS = pOS.Win8_1;
+			if ((Os_WindVerInfoEx.dwMinorVersion == 3) && (Os_WindVerInfoEx.wProductType != VER_NT_WORKSTATION))
+				pszOS = pOS.Server2012_R2;
+			break;
+		}
+	}
+
+	OSInformed OSVersion;
+	OSVersion.VersionTitle = pszOS;
+	OSVersion.Major = Os_WindVerInfoEx.dwMajorVersion;
+	OSVersion.Minor = Os_WindVerInfoEx.dwMinorVersion;
+	if (Os_WindVerInfoEx.wProductType == VER_NT_WORKSTATION)
+		OSVersion.WorkStation = true;
+	else
+		OSVersion.WorkStation = false;
+
+	return OSVersion;
 }
