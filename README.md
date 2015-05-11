@@ -1,4 +1,4 @@
-# Radio Player # 
+# Radio Player #
 
 [主页](http://radioplayer.laijingwu.com)
 
@@ -76,4 +76,4 @@ Radio Player 正在进行**v1.1.4**版开发。
 - 修复换台前音量无法保存，换台后恢复原有音量
 
 ***
-Code by Lai Jingwu. [www.laijingwu.com](http://www.laijingwu.com)
+Code by Lai Jingwu. [www.laijingwu.com](http://www.laijingwu.co
