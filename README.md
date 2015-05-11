@@ -8,7 +8,7 @@ Radio Player是一个英文的C++程序，用于模拟现实电台。
 
 Radio Player v1.1.3发行版本已经发布！
 
-Radio Player 正在进行*** v1.1.4 ***版开发。
+Radio Player 正在进行__v1.1.4__版开发。
 
 开发工具：`Visual Studio 2013`.
 
